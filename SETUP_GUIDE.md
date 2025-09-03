@@ -27,37 +27,26 @@ unzip contx.zip
 mv contx-main .contx
 ```
 
-### 2. Choose Your AI Tool Setup
+### 2. Set Up Context Engine
 
-**For Augment Users:**
-```bash
-cd .contx
-./scripts/sync-to-augment.sh
-```
-
-**For Warp Users:**
-```bash
-cd .contx
-./scripts/sync-to-warp.sh
-```
-
-**For Gemini CLI Users:**
-```bash
-cd .contx
-./scripts/sync-to-gemini.sh
-```
-
-**For Multi-Tool Environments:**
 ```bash
 cd .contx
 ./scripts/sync-all.sh
 ```
 
+**NOTE**: The `sync-all.sh` script is currently under development and may require manual intervention or debugging. Its purpose is to automate the setup of the `context-engine` and agent-specific configuration files.
+
+This command will:
+- Create a `context-engine/` directory in your project root (outside the submodule).
+- Copy `global-context.md`, `domain-contexts/`, and `templates/` into `context-engine/`.
+- Generate agent-specific configuration files (`.augment/rules/`, `GEMINI.md`, `WARP.md`) in your project root.
+- Add instructions within these generated files to direct agents to the `context-engine/` for context.
+
 ### 3. Customize Global Context
 
 ```bash
 # Edit the global context for your project
-edit .contx/global-context.md
+edit ./context-engine/global-context.md
 ```
 
 Fill in your project-specific information:
@@ -71,7 +60,7 @@ Fill in your project-specific information:
 
 **Augment Test:**
 ```
-"Implement user login feature. Use @complex-task-template"
+"Implement user login feature. Use the task templates to guide you."
 ```
 
 **Warp Test:**
@@ -121,20 +110,16 @@ touch .contx/domain-contexts/notification-context.md
 
 ### Template Customization
 
-Modify templates to match your workflow:
+Modify templates to match your workflow by editing the files in the `.contx/templates/` directory. The new four-phase structure is designed to be modular and flexible.
 
-```bash
-# Customize task templates
-edit .contx/templates/simple-task.md
-edit .contx/templates/complex-task.md
-edit .contx/templates/research-task.md
-```
+- `01-problem-definition.md`: Define the "what" and "why".
+- `02-research.md`: Explore potential solutions.
+- `03-plan.md`: Create a detailed technical plan.
+- `04-implementation.md`: Track progress and log decisions.
 
-Common customizations:
-- Adjust time estimates for task complexity
-- Add project-specific sections
-- Include team-specific requirements
-- Modify acceptance criteria formats
+### Task Directory Structure
+
+When creating a new task, the directory structure should follow this convention: `task-[task-id]-[task-short-name]`. For example: `task-001-draft-workspace-skeleton`.
 
 ## Tool-Specific Configuration
 
@@ -163,7 +148,7 @@ Common customizations:
 
 2. **Test Context Loading:**
    - Open Warp in your project directory
-   - Ask a development question
+   - Ask: "How should I structure a new API endpoint?"
    - Verify project context is applied
 
 ### Gemini CLI Configuration
@@ -177,6 +162,141 @@ Common customizations:
    - Run `gemini` in your project directory
    - Verify context is automatically loaded
    - Test memory management across sessions
+
+## Advanced Setup
+
+### Git Integration
+
+Automate context synchronization with git hooks:
+
+```bash
+# Install git hooks
+# The sync-all.sh script handles the setup of agent-specific files.
+echo '#!/bin/bash' > .git/hooks/post-commit
+echo 'cd .contx && ./scripts/sync-all.sh' >> .git/hooks/post-commit
+chmod +x .git/hooks/post-commit
+```
+
+### Team Collaboration
+
+1. **Version Control Setup:**
+   ```bash
+   # Add to version control
+   git add .contx/
+   git add .augment/ WARP.md GEMINI.md  # Generated files
+   git commit -m "Add universal context engineering framework"
+   ```
+
+2. **Team Onboarding:**
+   ```bash
+   # Create team setup script
+   cat > setup-team-context.sh << 'EOF'
+   #!/bin/bash
+   echo "Setting up context engineering for team member..."
+   cd .contx
+   ./scripts/sync-all.sh
+   echo "Setup complete! Choose your preferred AI tool and start coding."
+   EOF
+   chmod +x setup-team-context.sh
+   ```
+
+### Continuous Integration
+
+Add context validation to CI:
+
+```yaml
+# .github/workflows/context-validation.yml
+name: Context Validation
+on: [push, pull_request]
+jobs:
+  validate-context:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Validate Context Files
+        run: |
+          # Check required files exist
+          test -f ./context-engine/global-context.md
+          test -f ./context-engine/templates/01-problem-definition.md
+          test -f ./context-engine/templates/02-research.md
+          test -f ./context-engine/templates/03-plan.md
+          test -f ./context-engine/templates/04-implementation.md
+          
+          # Validate sync scripts work
+          cd .contx
+          ./scripts/sync-all.sh
+```
+
+## Maintenance
+
+### Weekly Tasks (5 minutes)
+
+1. **Update Domain Contexts:**
+   ```bash
+   # Review and update patterns discovered during development
+   edit ./context-engine/domain-contexts/auth-context.md
+   ```
+
+2. **Sync Changes:**
+   ```bash
+   cd .contx
+   ./scripts/sync-all.sh
+   ```
+
+### After Major Features (15 minutes)
+
+1. **Document Decisions:**
+   ```bash
+   # Update global context with architectural decisions
+   edit ./context-engine/global-context.md
+   ```
+
+2. **Refine Templates:**
+   ```bash
+   # Improve templates based on what worked/didn't work
+   edit ./context-engine/templates/01-problem-definition.md
+   edit ./context-engine/templates/02-research.md
+   edit ./context-engine/templates/03-plan.md
+   edit ./context-engine/templates/04-implementation.md
+   ```
+
+### Monthly Review (30 minutes)
+
+1. **Assess Effectiveness:**
+   - Review AI assistant performance
+   - Identify context gaps
+   - Gather team feedback
+
+2. **System Improvements:**
+   - Add new domain contexts
+   - Create specialized templates
+   - Update auto-trigger descriptions
+
+## Troubleshooting
+
+### Common Issues
+
+**Issue**: Auto rules not triggering in Augment
+**Solution**: Check the `description` field in rule frontmatter matches task keywords
+
+**Issue**: Warp not loading project context
+**Solution**: Verify `WARP.md` exists in project root and current directory
+
+**Issue**: Gemini CLI not finding context
+**Solution**: Check `GEMINI.md` exists and run `gemini` from project directory
+
+**Issue**: Templates too verbose for team
+**Solution**: Customize templates in `./context-engine/templates/` to match team preferences
+
+**Issue**: Context getting stale
+**Solution**: Set up regular review schedule and update after major changes
+
+### Getting Help
+
+1. **Check Documentation:**
+   - Review `.contx/README.md`
+   - Check tool-specific documentation
+
 
 ## Advanced Setup
 
@@ -234,8 +354,10 @@ jobs:
         run: |
           # Check required files exist
           test -f .contx/global-context.md
-          test -f .contx/templates/simple-task.md
-          test -f .contx/templates/complex-task.md
+          test -f .contx/templates/01-problem-definition.md
+          test -f .contx/templates/02-research.md
+          test -f .contx/templates/03-plan.md
+          test -f .contx/templates/04-implementation.md
           
           # Validate sync scripts work
           cd .contx
@@ -269,7 +391,10 @@ jobs:
 2. **Refine Templates:**
    ```bash
    # Improve templates based on what worked/didn't work
-   edit .contx/templates/complex-task.md
+   edit .contx/templates/01-problem-definition.md
+   edit .contx/templates/02-research.md
+   edit .contx/templates/03-plan.md
+   edit .contx/templates/04-implementation.md
    ```
 
 ### Monthly Review (30 minutes)
@@ -308,7 +433,6 @@ jobs:
 1. **Check Documentation:**
    - Review `.contx/README.md`
    - Check tool-specific documentation
-   - Review examples in `.contx/examples/`
 
 2. **Community Support:**
    - GitHub Issues: Report bugs and request features
