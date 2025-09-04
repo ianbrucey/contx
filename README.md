@@ -97,10 +97,18 @@ edit ./context-engine/global-context.md
 
 ### 🔄 How It Works
 
-1. **Single Source of Truth**: Maintain context in `.contx/` directory
-2. **Tool Adaptation**: Scripts convert to tool-specific formats
-3. **Automatic Sync**: Keep all tools updated with one command
-4. **Hierarchical Context**: Global → Domain → Task-specific guidance
+The core idea is to create a single source of truth for project context and then distribute it in a way that various AI tools can understand and use.
+
+1.  **Single Source of Truth (`.contx/`)**: The process starts with the `.contx` submodule, which acts as the master template for all project context. It contains the foundational templates for global context, domain-specific knowledge, and task structures.
+
+2.  **Synchronization (`sync-all.sh`)**: A key script, `contx/scripts/sync-all.sh`, automates the main setup. When executed, it:
+    *   **Creates `context-engine/`**: A directory in your project root that will hold the live, project-specific context.
+    *   **Populates Context**: It copies the templates from `.contx` into the `context-engine` directory.
+    *   **Generates Pointers**: It creates tool-specific configuration files (e.g., `GEMINI.md`, `WARP.md`) in the root directory. These files act as pointers, instructing AI tools to load their context from the `context-engine`.
+
+3.  **Customization (`context-engine/`)**: After the initial sync, the files within the `context-engine` directory are meant to be customized. You would edit `context-engine/global-context.md`, for example, to fill in the specific details of your project, transforming it from a generic template into actionable guidance.
+
+4.  **Hierarchical Context & Usage**: Once set up, AI tools automatically load the structured context from `context-engine`. This context is hierarchical (Global → Domain → Task), allowing for a comprehensive understanding of the project at different levels of detail.
 
 ## 🛠️ Supported AI Tools
 
@@ -248,6 +256,14 @@ How to initiate a new task:
    cd .contx && ./scripts/sync-all.sh
    ```
 4. ▶️ Proceed to `02-research.md`, `03-plan.md`, then `04-implementation.md` as work advances
+
+#### Active task pointer (optional but recommended)
+- To indicate the current focus, write a JSON pointer at `context-engine/active-task.json`.
+- Use the helper script to set it:
+  ```bash
+  ./contx/scripts/set-active-task.sh tasks/task-CAT-001-my-task --title "My Task" --status in-progress --priority P1
+  ```
+- Agents should check this file first when building context.
 
 #### Task metadata schema (optional)
 Each task may include a `task-metadata.json` file to help agents track state, priority, and cross-links. A shared JSON Schema is provided at:

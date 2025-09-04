@@ -16,11 +16,13 @@ CONTEXT_ENGINE_DIR="$PROJECT_ROOT/context-engine"
 mkdir -p "$CONTEXT_ENGINE_DIR/domain-contexts"
 mkdir -p "$CONTEXT_ENGINE_DIR/templates"
 mkdir -p "$CONTEXT_ENGINE_DIR/tasks"
+mkdir -p "$CONTEXT_ENGINE_DIR/standards"
 
 # Copy global-context.md, domain-contexts, and templates to context-engine
 cp "$PROJECT_CONTX_DIR/global-context.md" "$CONTEXT_ENGINE_DIR/global-context.md"
 cp -r "$PROJECT_CONTX_DIR/domain-contexts/." "$CONTEXT_ENGINE_DIR/domain-contexts/"
 cp -r "$PROJECT_CONTX_DIR/templates/." "$CONTEXT_ENGINE_DIR/templates/"
+cp -r "$PROJECT_CONTX_DIR/standards/." "$CONTEXT_ENGINE_DIR/standards/"
 
 # Agent files (static): copy authored files from contx into project root
 mkdir -p "$PROJECT_ROOT/.augment"

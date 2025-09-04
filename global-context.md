@@ -55,9 +55,14 @@
 - [Resource constraint]
 
 **Coding Standards**:
-- [Standard 1]
-- [Standard 2]
-- [Standard 3]
+- See the `context-engine/standards` directory for detailed coding standards.
+
+## Architectural & Coding Standards
+**Mandatory Adherence**: Before writing or modifying any code, you **MUST** consult the documents within the `context-engine/standards/` directory. These documents define the mandatory coding standards, design patterns, and architectural guidelines for this project.
+
+- **Adherence is not optional.**
+- If a standard for a specific situation is not defined, you must follow the established conventions in the existing codebase.
+- The standards directory is the single source of truth for all coding and architectural decisions.
 
 ## Context Engineering Workflow
 When assigned a new task, AI assistants should:

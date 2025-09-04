@@ -1,4 +1,28 @@
-# Universal Global Project Context
+---
+type: always
+description: "Static Augment entrypoint that explains context engine workflow"
+---
+
+# Augment Rules Context (Static)
+
+Purpose
+- This file is authored in the contx/ submodule and copied to the project root under `.augment/rules/` by the setup script.
+- It explains how Augment should load context and where the single source of truth lives.
+
+How Augment should think about this project
+- The source of truth is in `context-engine/` at the project root.
+- Always begin with `context-engine/global-context.md` to understand architecture, constraints, and direction.
+- Before writing or modifying any code, you **MUST** consult the documents within the `context-engine/standards/` directory. These documents define the mandatory coding standards, design patterns, and architectural guidelines for this project.
+- Domain specifics live under `context-engine/domain-contexts/`.
+- Tasks are organized under `context-engine/tasks/` using the documented naming convention.
+
+Active task
+- If present, read `context-engine/active-task.json` to discover the currently active task and preferred context.
+- If absent, list `context-engine/tasks/` and prompt the user to choose.
+
+Usage
+- Use `@template-name` to invoke task templates; templates are mirrored from `context-engine/templates/`.
+- For any work item, consult `context-engine/global-context.md` first.
 
 ## Problem Definition & Scope
 <!-- Define the overall problem this project solves and its boundaries -->
@@ -55,9 +79,7 @@
 - [Resource constraint]
 
 **Coding Standards**:
-- [Standard 1]
-- [Standard 2]
-- [Standard 3]
+- See the `context-engine/standards` directory for detailed coding standards.
 
 ## Context Engineering Workflow
 When assigned a new task, AI assistants should:
