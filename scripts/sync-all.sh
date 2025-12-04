@@ -15,8 +15,10 @@ CONTEXT_ENGINE_DIR="$PROJECT_ROOT/context-engine"
 # Create the context-engine directory if it doesn't exist
 mkdir -p "$CONTEXT_ENGINE_DIR/domain-contexts"
 mkdir -p "$CONTEXT_ENGINE_DIR/templates"
+mkdir -p "$CONTEXT_ENGINE_DIR/templates/specs"
 mkdir -p "$CONTEXT_ENGINE_DIR/tasks"
 mkdir -p "$CONTEXT_ENGINE_DIR/standards"
+mkdir -p "$CONTEXT_ENGINE_DIR/specs"
 
 # Copy global-context.md, domain-contexts, and templates to context-engine
 cp "$PROJECT_CONTX_DIR/global-context.md" "$CONTEXT_ENGINE_DIR/global-context.md"
@@ -28,10 +30,11 @@ cp -r "$PROJECT_CONTX_DIR/standards/." "$CONTEXT_ENGINE_DIR/standards/"
 mkdir -p "$PROJECT_ROOT/.augment"
 cp -R "$PROJECT_CONTX_DIR/.augment/rules" "$PROJECT_ROOT/.augment/"
 
-# Warp: copy static WARP.md from contx
-cp "$PROJECT_CONTX_DIR/WARP.md" "$PROJECT_ROOT/WARP.md"
+# Copy AGENTS.md to project root
+cp "$PROJECT_CONTX_DIR/AGENTS.md" "$PROJECT_ROOT/AGENTS.md"
 
-# Gemini: copy static GEMINI.md from contx
-cp "$PROJECT_CONTX_DIR/GEMINI.md" "$PROJECT_ROOT/GEMINI.md"
+# Generate WARP.md and GEMINI.md from AGENTS.md
+cp "$PROJECT_ROOT/AGENTS.md" "$PROJECT_ROOT/WARP.md"
+cp "$PROJECT_ROOT/AGENTS.md" "$PROJECT_ROOT/GEMINI.md"
 
 echo "Context synchronized successfully!"
