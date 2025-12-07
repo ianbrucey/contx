@@ -477,7 +477,11 @@ Output a structured implementation plan.""",
     print("✅ COUNCIL SESSION ADJOURNED")
     print("=" * 60)
     print(f"\nArtifacts generated in: {DIRS['SPECS']}/")
-    print("Ready for Execution Phase (State 4).\n")
+    print("\nReady for Execution Phase (State 4).")
+    print("To execute the plan with sub-agents:")
+    print("  python scripts/executor.py --list     # Preview tickets")
+    print("  python scripts/executor.py            # Execute all tickets")
+    print("  python scripts/executor.py --ticket 1 # Execute specific ticket\n")
 
 
 if __name__ == "__main__":

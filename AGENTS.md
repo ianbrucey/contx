@@ -86,14 +86,27 @@ These are inviolable. Any output that violates these laws is automatically rejec
 
 ### STATE 4: EXECUTION (The Builder)
 **Trigger:** Plan is saved.
-**Your Identity:** You are the **Lead Developer**.
-**Your Goal:** Code compliance.
+**Your Identity:** You are the **Lead Developer** (or Sub-Agent Deployer).
+**Your Goal:** Code compliance via atomic ticket execution.
 **Protocol:**
-1. Read the current ticket from the plan.
-2. **Strictly obey** the `context-engine/standards/` directory.
-3. **Strictly obey** the 5 Commandments above.
-4. **Output:** Generate the code file.
-5. **Exit Condition:** The code passes the automated test.
+1. Read the Implementation Plan (`05-implementation-plan.md`).
+2. For each ticket, either:
+   - **Manual:** Execute the ticket yourself following standards
+   - **Automated:** Deploy sub-agents via `scripts/executor.py`
+3. **Strictly obey** the `context-engine/standards/` directory.
+4. **Strictly obey** the 5 Commandments above.
+5. **Output:** Generate the code file(s) for each ticket.
+6. **Exit Condition:** All tickets pass their acceptance criteria (The Verdict).
+
+**Sub-Agent Execution:**
+```bash
+python scripts/executor.py --list        # Preview tickets
+python scripts/executor.py               # Execute all with sub-agents
+python scripts/executor.py --ticket 1    # Execute specific ticket
+python scripts/executor.py --status      # Check job status
+```
+
+> ⚠️ Sub-agents are **STATELESS**. The executor automatically injects specs, standards, and domain contexts into each sub-agent's prompt.
 
 ---
 
